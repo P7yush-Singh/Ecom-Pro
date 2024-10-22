@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Shopping Cart | MyShop</title>
+    <link rel="stylesheet" href="cart.css">
+    <style>
+        .cart-item { 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            background-color: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .item-details { flex-grow: 1; }
+        #cart-summary { 
+            font-weight: bold; 
+            margin-top: 20px; 
+            padding: 15px;
+            background-color: #e9e9e9;
+            border-radius: 5px;
+        }
+        #debug-info { 
+            margin-top: 20px; 
+            padding: 15px; 
+            border-radius: 5px;
+        }
+        h1, h2 { color: #333; }
+        button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff1a1a;
+        }
+        .buy-button {
+            position: relative;
+    background-color: #4CAF50;
+    margin: 10px auto;
+    padding: 10px 30px;
+    font-size: 1.3rem;
+    left: 90%;
+}
+        .buy-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!-- Header / Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">MyShop</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="wishlist.html">WishList</a></li>
+            </ul>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button type="button" id="search-btn">Search</button>
+            </div>
+            <div class="cart-icon">
+                <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Shopping Cart Section -->
+    <h1>Your Shopping Cart</h1>
+    <div id="cart-items"></div>
+    <div id="cart-summary"></div>
+    <button class="buy-button" id="buy-btn" onclick="buyItems()">Buy</button>
+    <div id="debug-info"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 MyShop. All Rights Reserved.</p>
+            <ul class="social-links">
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#"> Instagram</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+
+        function displayCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartSummaryContainer = document.getElementById('cart-summary');
+            const debugInfoContainer = document.getElementById('debug-info');
+
+            // Attempt to get cart data
+            let cartData = localStorage.getItem('cart');
+
+            let cart;
+            try {
+                cart = JSON.parse(cartData) || sampleCartData; // Use sample data if localStorage is empty
+            } catch (error) {
+                console.error('Error parsing cart data:', error);
+                debugInfoContainer.innerHTML += `<p><strong>Error parsing cart data:</strong> ${error.message}</p>`;
+                cart = [];
+            }
+
+            cartItemsContainer.innerHTML = '<h2>Cart Contents:</h2>';
+            let total = 0;
+
+            if (!Array.isArray(cart) || cart.length === 0) {
+                cartItemsContainer.innerHTML += '<p>Your cart is empty.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image || 'placeholder.jpg'}" alt="${item.name || 'N/A'}" width="100" height="100">
+                        <div class="item-details">
+                            <h3>Item ${index + 1}</h3>
+                            <p>Name: ${item.name || 'N/A'}</p>
+                            <p>Price: $${item.price ? item.price.toFixed(2) : 'N/A'}</p>
+                            <p>Quantity: ${item.quantity || 'N/A'}</p>
+                            <p>Total: $${itemTotal ? itemTotal.toFixed(2) : 'N/A'}</p>
+                            <button onclick="removeFromCart(${index})">Remove</button>
+                        </div>
+                    </div>
+                    `;
+                });
+            }
+
+            cartSummaryContainer.innerHTML = `<h2>Total: $${total.toFixed(2)}</h2>`;
+        }
+
+        function removeFromCart(index) {
+            let cartData = localStorage.getItem('cart');
+            let cart = JSON.parse(cartData) || sampleCartData; // Use sample data if localStorage is empty
+
+            if (cart[index]) {
+                cart[index].quantity--; // Decrease quantity
+                if (cart[index].quantity <= 0) {
+                    cart.splice(index, 1); // Remove item if quantity is 0
+                }
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+            displayCart(); // Refresh the cart display
+        }
+
+        function buyItems() {
+            // Implement the purchase logic here
+            // For demonstration purposes, just alert the total amount
+            const totalAmount = document.querySelector('#cart-summary h2').textContent.replace('Total: $', '');
+            alert(`You are about to purchase items worth $${totalAmount}.`);
+            alert('Proceeding to checkout...');
+    window.location.href = 'checkout.html';
+        }
+
+        // Call the displayCart function when the page loads
+        window.onload = displayCart;
+    </script>
+</body>
+</html>

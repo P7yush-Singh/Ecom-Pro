@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Product Listing | MyShop</title>
+    <link rel="stylesheet" href="product.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- Header / Navigation Bar -->
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <a href="index.html">MyShop</a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="wishlist.html">WishList</a></li>
+        </ul>
+        <div class="search-bar">
+          <input type="text" placeholder="Search for products..." />
+          <button type="button" id="search-btn">Search</button>
+        </div>
+        <div class="cart-icon">
+          <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="product-listing">
+      <div class="container">
+        <!-- Sidebar Filters -->
+        <aside class="filters">
+          <h2>Filter Products</h2>
+          <div class="filter-group">
+            <h3>Price</h3>
+            <input
+              type="range"
+              min="0"
+              max="1000"
+              step="10"
+              value="499"
+              id="price-range"
+            />
+            <p>Max Price: $<span id="price-value">499</span></p>
+          </div>
+          <div class="filter-group">
+            <h3>Category</h3>
+            <select id="category-filter">
+              <option value="all">All Categories</option>
+              <option value="electronics">Electronics</option>
+              <option value="clothing">Clothing</option>
+              <option value="home-appliances">Home Appliances</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <h3>Brand</h3>
+            <input type="checkbox" id="brand1" /> Brand 1<br />
+            <input type="checkbox" id="brand2" /> Brand 2<br />
+            <input type="checkbox" id="brand3" /> Brand 3<br />
+          </div>
+          <div class="filter-group">
+            <h3>Size</h3>
+            <input type="checkbox" id="size-s" /> Small<br />
+            <input type="checkbox" id="size-m" /> Medium<br />
+            <input type="checkbox" id="size-l" /> Large<br />
+          </div>
+          <div class="filter-group">
+            <h3>Color</h3>
+            <input type="checkbox" id="color-red" /> Red<br />
+            <input type="checkbox" id="color-blue" /> Blue<br />
+            <input type="checkbox" id="color-green" /> Green<br />
+          </div>
+        </aside>
+
+        <!-- Products Section -->
+        <section class="products">
+          <h2>Products</h2>
+          <div class="products-container">
+            <!-- Product List (Initially loaded items) -->
+            <div class="product-card">
+              <img
+                src="https://themewagon.github.io/stylish/images/card-image2.jpg"
+                alt="Product 1"
+              />
+              <h3>Product 1</h3>
+              <p>$50.00</p>
+              <button class="add-to-cart btn" data-product-id="1" data-product-name="Product 1" data-product-price="50.00"><span>Add to Cart</span></button>
+            </div>
+            <div class="product-card">
+                <img src="Assests/p2.jpg" alt="Product 1">
+                <h3>Product 2</h3>
+                <p>$60.00</p>
+                <button class="add-to-cart btn" data-product-id="2" data-product-name="Product 2" data-product-price="60.00"><span>Add to Cart</span></button>
+            </div>
+            <div class="product-card">
+                <img src="Assests/p3.jpg" alt="Product 1">
+                <h3>Product 3</h3>
+                <p>$70.00</p>
+                <button class="add-to-cart btn" data-product-id="3" data-product-name="Product 3" data-product-price="70.00"><span>Add to Cart</span></button>
+            </div>
+            <!-- More products -->
+            <div class="product-card">
+                <img src="Assests/p5.jpg" alt="Product 1">
+                <h3>Product 4</h3>
+                <p>$85.00</p>
+                <button class="add-to-cart btn" data-product-id="4" data-product-name="Product 4" data-product-price="85.00"><span>Add to Cart</span></button>
+            </div>
+            <div class="product-card">
+              <img src="Assests/p4.jpg" alt="Product 1">
+                <h3>Product 5</h3>
+                <p>$75.00</p>
+                <button class="add-to-cart btn" data-product-id="5" data-product-name="Product 5" data-product-price="75.00"><span>Add to Cart</span></button>
+            </div>
+          </div>
+
+          <!-- Pagination / Load More Button -->
+          <div class="pagination">
+            <button class="btn" id="load-more-btn" onclick="alert('Currently can not load more products');">Load More</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2024 MyShop. All Rights Reserved.</p>
+        <ul class="social-links">
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      // Initialize cart array in localStorage if it doesn't exist
+if (!localStorage.getItem('cart')) {
+    localStorage.setItem('cart', JSON.stringify([]));
+}
+
+// Function to add item to cart
+function addToCart(button) {
+    const productId = button.getAttribute('data-product-id');
+    const productName = button.getAttribute('data-product-name');
+    const productPrice = parseFloat(button.getAttribute('data-product-price'));
+    
+    let cart = JSON.parse(localStorage.getItem('cart'));
+    
+    // Check if product is already in cart
+    const existingProductIndex = cart.findIndex(item => item.id === productId);
+    
+    if (existingProductIndex !== -1) {
+        // If product exists, increase quantity
+        cart[existingProductIndex].quantity += 1;
+    } else {
+        // If product doesn't exist, add new item
+        cart.push({
+            id: productId,
+            name: productName,
+            price: productPrice,
+            quantity: 1
+        });
+    }
+    
+    // Save updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Update cart icon or display (optional)
+    updateCartDisplay();
+    
+    // Provide user feedback
+    alert(`${productName} added to cart!`);
+}
+
+// Function to update cart display (implement as needed)
+function updateCartDisplay() {
+    const cart = JSON.parse(localStorage.getItem('cart'));
+    const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+    
+    // Update cart icon or display
+    // For example, if you have a cart item count element:
+    // document.getElementById('cart-count').textContent = cartItemCount;
+}
+
+// Add event listeners to all "Add to Cart" buttons
+document.addEventListener('DOMContentLoaded', function() {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            addToCart(this);
+        });
+    });
+});
+    </script>
+  </body>
+</html>
